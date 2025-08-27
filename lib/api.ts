@@ -1,9 +1,14 @@
 import axios from "axios";
 import type { Note, NoteTag } from "@/types/note";
-axios.defaults.baseURL = "https://notehub-public.goit.study/api";
+// axios.defaults.baseURL = "https://localhost:3000/api";
 const myKey = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 const myApiKey = `Bearer ${myKey}`;
 axios.defaults.headers.common['Authorization'] = myApiKey;
+
+const nextServer = axios.create({
+  baseURL: 'http://localhost:3000/api',
+  withCredentials: true,
+});
 
 if (!myKey) {
   throw new Error('NEXT_PUBLIC_NOTEHUB_TOKEN is not defined. Please check your .env configuration.');
@@ -70,4 +75,11 @@ export const CreateNote = async (note: CreateNoteDto): Promise<Note> => {
 export const deleteNote = async (id: string): Promise<Note> => {
     const response = await axios.delete<Note>(`/notes/${id}`);
     return response.data;
+};
+
+export const getNotes = async (categoryId?: string) => {
+  const res = await nextServer.get<Note>('/notes', {
+    params: { categoryId },
+  });
+  return res.data;
 };
