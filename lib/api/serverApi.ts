@@ -6,57 +6,31 @@ import { User } from "@/types/user";
 export const checkServerSession = async () => {
   const cookieStore = cookies();
   const response = await api.get("/auth/session", {
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
+    headers: { Cookie: cookieStore.toString() },
   });
-  return response;
+  return response.data;
 };
 
 export const getServerMe = async (): Promise<User> => {
   const cookieStore = cookies();
   const { data } = await api.get("/users/me", {
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
+    headers: { Cookie: cookieStore.toString() },
   });
   return data;
 };
 
-export const fetchNotes = async ({
-  page = 1,
-  perPage = 12,
-  search,
-  tag,
-}: FetchNotesParams): Promise<FetchNotesResponse> => {
+export const fetchNotes = async ({ page = 1, perPage = 12, search, tag }: FetchNotesParams): Promise<FetchNotesResponse> => {
   const cookieStore = cookies();
   const response = await api.get<RawFetchNotesResponse>("/notes", {
-    params: {
-      page,
-      perPage,
-      ...(search && { search }),
-      ...(tag && tag !== "All" && { tag }),
-    },
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
+    params: { page, perPage, ...(search && { search }), ...(tag && tag !== 'All' && { tag }) },
+    headers: { Cookie: cookieStore.toString() },
   });
-
   const raw = response.data;
-  return {
-    page,
-    perPage,
-    data: raw.notes,
-    total_pages: raw.totalPages,
-  };
+  return { page, perPage, data: raw.notes, total_pages: raw.totalPages };
 };
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
   const cookieStore = cookies();
-  const response = await api.get<Note>(`/notes/${id}`, {
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
-  });
+  const response = await api.get<Note>(`/notes/${id}`, { headers: { Cookie: cookieStore.toString() } });
   return response.data;
 };
