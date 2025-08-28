@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { api } from "../api/api"; 
+import { api } from "./api"; 
 import { FetchNotesParams, FetchNotesResponse, RawFetchNotesResponse, Note } from "@/types/note";
 import { User } from "@/types/user";
 

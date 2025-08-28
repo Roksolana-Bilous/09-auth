@@ -1,4 +1,4 @@
-import { api } from "../api/api";
+import { api } from "./api";
 import type { User, LoginRequestData, RegisterRequestData, UpdateUserRequest, CheckSessionRequest } from "@/types/user";
 import { FetchNotesParams, FetchNotesResponse, RawFetchNotesResponse, Note, CreateNoteDto } from "@/types/note";
 
