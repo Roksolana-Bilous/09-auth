@@ -1,3 +1,4 @@
+import "server-only";
 import { cookies } from "next/headers";
 import { api } from "./api"; 
 import { FetchNotesParams, FetchNotesResponse, RawFetchNotesResponse, Note } from "@/types/note";
