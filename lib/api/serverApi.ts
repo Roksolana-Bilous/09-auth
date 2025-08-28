@@ -1,11 +1,10 @@
-import "server-only";
 import { cookies } from "next/headers";
 import { api } from "./api"; 
 import { FetchNotesParams, FetchNotesResponse, RawFetchNotesResponse, Note } from "@/types/note";
 import { User } from "@/types/user";
 
 export const checkServerSession = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const response = await api.get("/auth/session", {
     headers: { Cookie: cookieStore.toString() },
   });
@@ -13,7 +12,7 @@ export const checkServerSession = async () => {
 };
 
 export const getServerMe = async (): Promise<User> => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const { data } = await api.get("/users/me", {
     headers: { Cookie: cookieStore.toString() },
   });
@@ -21,7 +20,7 @@ export const getServerMe = async (): Promise<User> => {
 };
 
 export const fetchNotes = async ({ page = 1, perPage = 12, search, tag }: FetchNotesParams): Promise<FetchNotesResponse> => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const response = await api.get<RawFetchNotesResponse>("/notes", {
     params: { page, perPage, ...(search && { search }), ...(tag && tag !== 'All' && { tag }) },
     headers: { Cookie: cookieStore.toString() },
@@ -31,7 +30,7 @@ export const fetchNotes = async ({ page = 1, perPage = 12, search, tag }: FetchN
 };
 
 export const fetchNoteById = async (id: string): Promise<Note> => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const response = await api.get<Note>(`/notes/${id}`, { headers: { Cookie: cookieStore.toString() } });
   return response.data;
 };
