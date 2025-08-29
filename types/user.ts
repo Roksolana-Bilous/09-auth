@@ -15,7 +15,7 @@ export type LoginRequestData = {
 export type RegisterRequestData = {
   email: string;
   password: string;
-  username?: string; // якщо бекенд дозволяє
+  username?: string;
 };
 
 export type UpdateUserRequest = {

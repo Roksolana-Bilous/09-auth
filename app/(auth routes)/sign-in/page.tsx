@@ -1,10 +1,9 @@
 "use client";
-
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api/clientApi";
 import { LoginRequestData } from "@/types/user";
-import { ApiError } from "@/lib/api/api";
 import { useAuthStore } from "@/lib/store/authStore";
 import css from "./SignInPage.module.css";
 
@@ -25,13 +24,13 @@ export default function SignInPage() {
                 setError("Wrong email of password");
             }
         } catch (error) {
+            const err = error as AxiosError<{ error?: string }>;
             setError(
-                (error as ApiError).response?.data?.error ??
-                (error as ApiError).message ??
-                "Something went wrong"
-            )
+                err.response?.data?.error ??
+                err.message ??
+                "Something went wrong")
+        };
         }
-    };
 
   return (
     <main className={css.mainContent}>

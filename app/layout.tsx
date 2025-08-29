@@ -6,9 +6,6 @@ import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
 import { Roboto } from "next/font/google";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
-
-
-
 export const metadata: Metadata = {
   title: "NoteHub",
   description: "NoteHub is a simple and efficient application designed for managing personal notes",
@@ -30,7 +27,8 @@ const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-roboto",
-  display: "swap"
+  display: "swap",
+  preload: false,
 })
 
 export default function RootLayout({
