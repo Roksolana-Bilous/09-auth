@@ -7,9 +7,19 @@ export const checkServerSession = async () => {
   return response.data;
 };
 
-export const getServerMe = async (): Promise<User> => {
-  const { data } = await nextServer.get("/users/me");
-  return data;
+export const getServerMe = async (): Promise<User | null> => {
+    try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/me`, {
+      cache: "no-store",
+      credentials: "include",
+    });
+
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    console.error("getServerMe failed:", err);
+    return null;
+  }
 };
 
 export const fetchNotes = async ({ page = 1, perPage = 12, search, tag }: FetchNotesParams): Promise<FetchNotesResponse> => {
