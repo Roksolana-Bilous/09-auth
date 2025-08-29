@@ -1,10 +1,7 @@
 export interface User {
-  id: string;
   email: string;
   username: string;
-  createdAt: string;
-  updatedAt: string;
-  avatar?: string;
+  avatar: string;
 }
 
 export type LoginRequestData = {
@@ -20,11 +17,4 @@ export type RegisterRequestData = {
 
 export type UpdateUserRequest = {
   username?: string;
-  email?: string;
-  password?: string;
-  avatarUrl?: string;
-};
-
-export type CheckSessionRequest = {
-  success: boolean;
 };

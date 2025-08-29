@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuthStore } from "@/lib/store/authStore";
-import { updateProf } from "@/lib/api/clientApi";
+import { updateProfile } from "@/lib/api/clientApi";
 import css from "./EditProfilePage.module.css";
 
 export default function EditProfilePage() {
@@ -28,7 +28,7 @@ export default function EditProfilePage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const updatedUser = await updateProf({ username });
+      const updatedUser = await updateProfile({ username });
       setUser(updatedUser);
       router.push("/profile");
     } catch (error) {

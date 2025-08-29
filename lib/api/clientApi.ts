@@ -1,6 +1,6 @@
 import { nextServer } from "./api";
 
-import type { User, LoginRequestData, RegisterRequestData, UpdateUserRequest, CheckSessionRequest } from "@/types/user";
+import type { User, LoginRequestData, RegisterRequestData, UpdateUserRequest } from "@/types/user";
 import { FetchNotesParams, FetchNotesResponse, RawFetchNotesResponse, Note, CreateNoteDto } from "@/types/note";
 
 
@@ -17,7 +17,7 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
   return response.data;
 };
 
-export const CreateNote = async (note: CreateNoteDto): Promise<Note> => {
+export const createNote = async (note: CreateNoteDto): Promise<Note> => {
   const response = await nextServer.post<Note>('/notes', note);
   return response.data;
 };
@@ -41,17 +41,17 @@ export const logout = async (): Promise<void> => {
   await nextServer.post("/auth/logout");
 };
 
-export const getProf = async (): Promise<User> => {
+export const getProfile = async (): Promise<User> => {
   const response = await nextServer.get<User>("/users/me");
   return response.data;
 };
 
-export const updateProf = async (payload: UpdateUserRequest): Promise<User> => {
+export const updateProfile = async (payload: UpdateUserRequest): Promise<User> => {
   const response = await nextServer.patch<User>("/users/me", payload);
   return response.data;
 };
 
 export const checkSession = async (): Promise<boolean> => {
-  const response = await nextServer.get<CheckSessionRequest>("/auth/session");
+  const response = await nextServer.get<{success: boolean}>("/auth/session");
   return response.data.success;
 };
