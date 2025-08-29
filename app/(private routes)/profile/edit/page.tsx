@@ -20,23 +20,26 @@ export default function EditProfilePage() {
     }
   }, [user]);
 
-    const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value);
-    };
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
 
-   const handleSaveUser = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const updatedUser = await updateProf({ username });
       setUser(updatedUser);
       router.push("/profile");
     } catch (error) {
-      console.error("Failed to udate user", error);
+      console.error("Failed to update user", error);
+    } finally {
+      setLoading(false);
     }
   };
-   
+
   const handleBack = () => {
-    router.back();
+    router.push("/profile");
   };
 
   return (
@@ -60,7 +63,7 @@ export default function EditProfilePage() {
               type="text"
               className={css.input}
               value={username}
-              onChange={handleSubmit}
+              onChange={handleUsernameChange}
               required
             />
           </div>

@@ -4,6 +4,26 @@ import Link from "next/link";
 import { getServerMe } from "@/lib/api/serverApi";
 import css from "./ProfilePage.module.css";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile Page",
+  description: "View and edit your profile on NoteHub",
+  openGraph: {
+    title: "Profile Page",
+    description: "View and edit your profile on NoteHub",
+    url: `https://notehub.com/profile`,
+    images: [
+      {
+        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+        width: 1200,
+        height: 630,
+        alt: "NoteHub Profile Page",
+      },
+    ],
+    type: "website",
+  },
+};
 
 export default async function ProfilePage() {
     const user = await getServerMe();
