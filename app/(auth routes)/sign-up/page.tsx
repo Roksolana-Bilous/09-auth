@@ -2,7 +2,7 @@
 
 import { AxiosError } from "axios";
 import { register } from "@/lib/api/clientApi";
-import { RegisterRequestData } from "@/types/user";
+import { RegisterRequestData } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
