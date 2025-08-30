@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { checkServerSession } from "@/lib/api/serverApi";
+import { checkServerSession, refreshServerSession } from "@/lib/api/serverApi";
 
 export async function middleware(req: NextRequest) {
   const cookieStore = await cookies();
@@ -13,31 +13,47 @@ export async function middleware(req: NextRequest) {
   const publicPaths = ["/sign-in", "/sign-up"];
   const privatePaths = ["/profile", "/notes"];
 
-  if (!accessToken && privatePaths.some((path) => pathname.startsWith(path))) {
+  if (!accessToken && !refreshToken && privatePaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 
-  if (accessToken && publicPaths.includes(pathname)) {
-    return NextResponse.redirect(new URL("/", req.url));
+  if (accessToken) {
+    const session = await checkServerSession();
+    if (session.success) {
+      if (publicPaths.includes(pathname)) {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+      return NextResponse.next();
+    }
+
+    if (refreshToken) {
+      const refreshed = await refreshServerSession();
+      if (refreshed?.newAccessToken && refreshed?.newRefreshToken) {
+        const response = NextResponse.next();
+        response.cookies.set("accessToken", refreshed.newAccessToken, { httpOnly: true });
+        response.cookies.set("refreshToken", refreshed.newRefreshToken, { httpOnly: true });
+        return response;
+      }
+    }
+
+    const response = NextResponse.redirect(new URL("/sign-in", req.url));
+    response.cookies.delete("accessToken");
+    response.cookies.delete("refreshToken");
+    return response;
   }
 
-  if (accessToken) {
-    const isValid = await checkServerSession();
-      if (!isValid) {
-        if (refreshToken) {
-        const refreshResponse = await checkServerSession();
-        if (refreshResponse?.newAccessToken && refreshResponse?.newRefreshToken) {
-          const response = NextResponse.redirect(new URL("/", req.url));
-          response.cookies.set("accessToken", refreshResponse.newAccessToken, { httpOnly: true });
-          response.cookies.set("refreshToken", refreshResponse.newRefreshToken, { httpOnly: true });
-          return response;
-        }
-      }
-      const response = NextResponse.redirect(new URL("/sign-in", req.url));
-      response.cookies.delete("accessToken");
-      response.cookies.delete("refreshToken");
+  if (!accessToken && refreshToken) {
+    const refreshed = await refreshServerSession();
+    if (refreshed?.newAccessToken && refreshed?.newRefreshToken) {
+      const response = NextResponse.next();
+      response.cookies.set("accessToken", refreshed.newAccessToken, { httpOnly: true });
+      response.cookies.set("refreshToken", refreshed.newRefreshToken, { httpOnly: true });
       return response;
     }
+
+    const response = NextResponse.redirect(new URL("/sign-in", req.url));
+    response.cookies.delete("refreshToken");
+    return response;
   }
 
   return NextResponse.next();
