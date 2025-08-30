@@ -3,14 +3,21 @@ import { nextServer } from "./api";
 import { FetchNotesParams, FetchNotesResponse, RawFetchNotesResponse, Note } from "@/types/note";
 import { User } from "@/types/user";
 
-export const checkServerSession = async () => {
-  const cookieStore = cookies();
-    const response = await nextServer.get("/auth/session", {
+interface SessionResponse {
+  newAccessToken?: string;
+  newRefreshToken?: string;
+  success: boolean;
+}
+
+
+export const checkServerSession = async (): Promise<SessionResponse> => {
+  const cookieStore = await cookies();
+    const response = await nextServer.get<SessionResponse>("/auth/session", {
     headers: {
-      Cookie: (await cookieStore).toString(),
+      Cookie: cookieStore.toString(),
     },
   });
-    return response;
+    return response.data;
 };
 
 export const getServerMe = async (): Promise<User | null> => {

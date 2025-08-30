@@ -1,8 +1,21 @@
 import { nextServer } from "./api";
-
-import type { User, LoginRequestData, RegisterRequestData, UpdateUserRequest } from "@/types/user";
+import type { User } from "@/types/user";
 import { FetchNotesParams, FetchNotesResponse, RawFetchNotesResponse, Note, CreateNoteDto } from "@/types/note";
 
+export type LoginRequestData = {
+  email: string;
+  password: string;
+};
+
+export type RegisterRequestData = {
+  email: string;
+  password: string;
+  username?: string;
+};
+
+export type UpdateUserRequest = {
+  username?: string;
+};
 
 export const fetchNotes = async ({ page = 1, perPage = 12, search = '', tag }: FetchNotesParams): Promise<FetchNotesResponse> => {
   const response = await nextServer.get<RawFetchNotesResponse>('/notes', {
